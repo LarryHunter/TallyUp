@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="8dp"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".activities.MainActivity"
+    tools:showIn="@layout/activity_main">
+
+    <LinearLayout
+        android:id="@+id/billAmountLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/amountText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:gravity="end"
+            android:hint="@string/bill_amount_text"
+            android:text="@string/bill_amount_text"
+            android:textColor="@color/colorPrimary"
+            android:textSize="32sp" />
+
+        <EditText
+            android:id="@+id/billAmountEntry"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:importantForAutofill="no"
+            android:inputType="numberDecimal"
+            android:maxLines="1"
+            android:textSize="32sp"
+            tools:ignore="LabelFor"
+            tools:targetApi="O"
+            tools:text="125.00" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/tipPercentageLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/billAmountLayout">
+
+        <TextView
+            android:id="@+id/tipPercentText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:gravity="end"
+            android:text="@string/tip_percentage_text"
+            android:textColor="@color/colorPrimary"
+            android:textSize="32sp" />
+
+        <Spinner
+            android:id="@+id/tipPercentOptions"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:layout_weight="1"
+            android:entries="@array/string_percentages"
+            android:prompt="@string/percentages_selector_prompt" />
+
+        <!--<EditText-->
+            <!--android:id="@+id/tipPercentageValue"-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginStart="8dp"-->
+            <!--android:layout_marginTop="8dp"-->
+            <!--android:layout_marginBottom="8dp"-->
+            <!--android:layout_weight="1"-->
+            <!--android:gravity="center_horizontal"-->
+            <!--android:importantForAutofill="no"-->
+            <!--android:inputType="number"-->
+            <!--android:maxLines="1"-->
+            <!--android:textSize="32sp"-->
+            <!--android:visibility="gone"-->
+            <!--tools:ignore="LabelFor"-->
+            <!--tools:targetApi="O"-->
+            <!--tools:text="20" />-->
+
+        <!--<TextView-->
+            <!--android:id="@+id/percentSignText"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginTop="8dp"-->
+            <!--android:layout_weight="1"-->
+            <!--android:text="@string/percent"-->
+            <!--android:textColor="@color/black"-->
+            <!--android:textSize="32sp"-->
+            <!--android:textStyle="bold"-->
+            <!--android:visibility="gone" />-->
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/splitLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tipPercentageLayout">
+
+        <Switch
+            android:id="@+id/splitBillSwitch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:text="@string/split_bill_text"
+            android:textColor="@color/colorPrimary"
+            android:textSize="32sp"
+            android:thumbTextPadding="8dp" />
+
+        <EditText
+            android:id="@+id/numPayers"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:importantForAutofill="no"
+            android:inputType="number"
+            android:maxLines="1"
+            android:textSize="32sp"
+            tools:ignore="LabelFor"
+            tools:targetApi="O"
+            tools:text="4" />
+    </LinearLayout>
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/splitLayout" />
+
+    <LinearLayout
+        android:id="@+id/tipAmountLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/divider">
+
+        <TextView
+            android:id="@+id/tipAmountText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:gravity="end"
+            android:hint="@string/bill_amount_text"
+            android:text="@string/tip_amount_text"
+            android:textColor="@color/colorPrimary"
+            android:textSize="32sp" />
+
+        <EditText
+            android:id="@+id/tipAmountDisplay"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:layout_weight="1"
+            android:enabled="false"
+            android:importantForAutofill="no"
+            android:inputType="numberDecimal"
+            android:maxLines="1"
+            android:textAlignment="viewEnd"
+            android:textColor="@color/black"
+            android:textSize="32sp"
+            tools:ignore="LabelFor"
+            tools:targetApi="O"
+            tools:text="$25.00" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/dividedAmountLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical|end"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tipAmountLayout"
+        tools:layout_editor_absoluteY="325dp">
+
+        <TextView
+            android:id="@+id/dividedAmountText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:gravity="start"
+            android:text="@string/divided_amount_text"
+            android:textColor="@color/colorPrimary"
+            android:textSize="32sp" />
+
+        <EditText
+            android:id="@+id/dividedAmountDisplay"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:layout_weight="1"
+            android:enabled="false"
+            android:importantForAutofill="no"
+            android:inputType="numberDecimal"
+            android:maxLines="1"
+            android:textAlignment="viewEnd"
+            android:textColor="@color/black"
+            android:textSize="32sp"
+            tools:ignore="LabelFor"
+            tools:targetApi="O"
+            tools:text="$37.50" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/totalAmountLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical|end"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/dividedAmountLayout"
+        tools:layout_editor_absoluteY="325dp">
+
+        <TextView
+            android:id="@+id/totalAmountText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:gravity="start"
+            android:text="@string/total_amount_text"
+            android:textColor="@color/colorPrimary"
+            android:textSize="32sp" />
+
+        <EditText
+            android:id="@+id/totalAmountDisplay"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:layout_weight="1"
+            android:enabled="false"
+            android:importantForAutofill="no"
+            android:inputType="numberDecimal"
+            android:maxLines="1"
+            android:textAlignment="viewEnd"
+            android:textColor="@color/black"
+            android:textSize="32sp"
+            tools:ignore="LabelFor"
+            tools:targetApi="O"
+            tools:text="$150.00" />
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

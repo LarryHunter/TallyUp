@@ -1,0 +1,43 @@
+<!DOCTYPE
+    resources [<!ENTITY copyright "Copyright © 2019 Hunter Dev">]
+    >
+
+<resources>
+    <string name="app_name">Tally Up</string>
+    <string name="action_settings">Set Default Tip %</string>
+    <string name="action_clear">Clear Fields</string>
+    <string name="action_about">About</string>
+    <string name="action_rate_app">Rate App</string>
+
+    <string name="button_text_ok">OK</string>
+    <string name="button_text_set">Set</string>
+    <string name="button_text_cancel">Cancel</string>
+    <string name="button_text_yes">Yes</string>
+    <string name="button_text_no">No</string>
+    <string name="button_text_later">Later</string>
+
+    <string name="percent">%</string>
+    <string name="copyright">&copyright;</string>
+
+    <string name="snackbar_sending_message">Sending message…</string>
+    <string name="snackbar_no_data_message">No data to send</string>
+    <string name="bill_amount_text">Bill Amount:</string>
+    <string name="tip_amount_text">Tip Amount:</string>
+    <string name="tip_percentage_text">Tip Percent:</string>
+    <string name="split_bill_text">Split Bill?</string>
+    <string name="total_amount_text">Total Bill:</string>
+    <string name="divided_amount_text">Split Amount:</string>
+
+    <string name="split_bill_dialog_title">Split the Bill</string>
+    <string name="split_bill_dialog_text">Enter the number of people splitting this bill.</string>
+    <string name="do_not_show_again_dialog_text">Don\'t show again</string>
+    <string name="default_percentage_dialog_title">Set Default Tip Percentage</string>
+
+    <string name="about_dialog_title">About Tally Up</string>
+    <string name="about_dialog_text">\n\'Tally Up\' is a tip calculator and a bill splitting utility. It makes calculating the tip and dividing up the bill among a group easier than ever.\n\nPlease use and enjoy.\n\n\n&copyright;</string>
+
+    <string name="rate_app_dialog_title">Rate Tally Up?</string>
+    <string name="rate_app_dialog_text">Please consider rating \'Tally Up\' and possibly providing feedback?\n\nBy giving constructive feedback you help create the best possible experience for all users.</string>
+    <string name="percentages_selector_prompt">Choose a percentage value.</string>
+
+</resources>

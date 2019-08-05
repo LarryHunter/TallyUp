@@ -1,0 +1,27 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.hunterdev.tallyup.activities.MainActivity">
+
+    <item
+        android:id="@+id/action_clear"
+        android:icon="@drawable/ic_refresh"
+        android:title="@string/action_clear"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_settings"
+        android:icon="@drawable/ic_edit"
+        android:title="@string/action_settings"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_about"
+        android:title="@string/action_about"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_rate_app"
+        android:title="@string/action_rate_app"
+        app:showAsAction="never" />
+</menu>
