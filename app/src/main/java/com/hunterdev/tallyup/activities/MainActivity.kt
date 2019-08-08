@@ -1,6 +1,5 @@
 package com.hunterdev.tallyup.activities
 
-import android.app.Activity
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
@@ -13,7 +12,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.WindowManager
-import android.view.inputmethod.InputMethodManager
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
@@ -143,33 +141,6 @@ class MainActivity : AppCompatActivity() {
 
         })
 
-
-//        tipPercentageValue.setText(getDefaultTipPercentage())
-//        tipPercentageValue.addTextChangedListener(object : TextWatcher {
-//            override fun beforeTextChanged(s: CharSequence?, p1: Int, p2: Int, p3: Int) {
-//            }
-//
-//            override fun onTextChanged(s: CharSequence?, p1: Int, p2: Int, p3: Int) {
-//            }
-//
-//            override fun afterTextChanged(s: Editable?) {
-//                tipAmountDisplay.setText(
-////                    calculator.calculateTip(billAmountEntry.text.toString(), tipPercentageValue.text.toString())
-//                    calculator.calculateTip(billAmountEntry.text.toString(), tipPercentOptions.selectedItem.toString())
-//                )
-//                totalAmountDisplay.setText(
-//                    calculator.calculateTotal(billAmountEntry.text.toString(), tipAmountDisplay.text.toString())
-//                )
-//                if (splitBillSwitch.isChecked) {
-//                    val billEntry = billAmountEntry.text.toString()
-//                    val tip = tipAmountDisplay.text.toString()
-//                    val payers =
-//                        if (!TextUtils.isEmpty(numPayers.text.toString())) numPayers.text.toString().toInt() else 1
-//                    dividedAmountDisplay.setText(calculator.calculateDividedAmount(billEntry, tip, payers))
-//                }
-//            }
-//        })
-
         numPayers.addTextChangedListener(
             object : TextWatcher {
                 override fun beforeTextChanged(s: CharSequence?, p1: Int, p2: Int, p3: Int) {
@@ -201,11 +172,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-//        tipPercentageValue.setOnFocusChangeListener { _, hasFocus ->
-//            if (hasFocus) {
-//                hideKeyboard()
-//            }
-//        }
         getPreferences()
         promptUserToRateApp()
     }
@@ -280,8 +246,6 @@ class MainActivity : AppCompatActivity() {
         tipPercentOptions.adapter = listAdapter
         val spinnerPosition = listAdapter.getPosition(selectedPref)
         tipPercentOptions.setSelection(spinnerPosition)
-
-//        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
     }
 
     private fun showAboutDialog() {
@@ -367,10 +331,10 @@ class MainActivity : AppCompatActivity() {
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
     }
 
-    private fun hideKeyboard() {
-        val inputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
-        inputMethodManager.hideSoftInputFromWindow(currentFocus!!.windowToken, 0)
-    }
+//    private fun hideKeyboard() {
+//        val inputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+//        inputMethodManager.hideSoftInputFromWindow(currentFocus!!.windowToken, 0)
+//    }
 
     private fun getPreferences() {
         val prefs = this.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)

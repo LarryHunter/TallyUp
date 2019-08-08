@@ -27,7 +27,7 @@
             android:hint="@string/bill_amount_text"
             android:text="@string/bill_amount_text"
             android:textColor="@color/colorPrimary"
-            android:textSize="32sp" />
+            android:textSize="24sp" />
 
         <EditText
             android:id="@+id/billAmountEntry"
@@ -39,7 +39,7 @@
             android:importantForAutofill="no"
             android:inputType="numberDecimal"
             android:maxLines="1"
-            android:textSize="32sp"
+            android:textSize="24sp"
             tools:ignore="LabelFor"
             tools:targetApi="O"
             tools:text="125.00" />
@@ -61,7 +61,7 @@
             android:gravity="end"
             android:text="@string/tip_percentage_text"
             android:textColor="@color/colorPrimary"
-            android:textSize="32sp" />
+            android:textSize="24sp" />
 
         <Spinner
             android:id="@+id/tipPercentOptions"
@@ -73,36 +73,6 @@
             android:layout_weight="1"
             android:entries="@array/string_percentages"
             android:prompt="@string/percentages_selector_prompt" />
-
-        <!--<EditText-->
-            <!--android:id="@+id/tipPercentageValue"-->
-            <!--android:layout_width="0dp"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_marginStart="8dp"-->
-            <!--android:layout_marginTop="8dp"-->
-            <!--android:layout_marginBottom="8dp"-->
-            <!--android:layout_weight="1"-->
-            <!--android:gravity="center_horizontal"-->
-            <!--android:importantForAutofill="no"-->
-            <!--android:inputType="number"-->
-            <!--android:maxLines="1"-->
-            <!--android:textSize="32sp"-->
-            <!--android:visibility="gone"-->
-            <!--tools:ignore="LabelFor"-->
-            <!--tools:targetApi="O"-->
-            <!--tools:text="20" />-->
-
-        <!--<TextView-->
-            <!--android:id="@+id/percentSignText"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_marginTop="8dp"-->
-            <!--android:layout_weight="1"-->
-            <!--android:text="@string/percent"-->
-            <!--android:textColor="@color/black"-->
-            <!--android:textSize="32sp"-->
-            <!--android:textStyle="bold"-->
-            <!--android:visibility="gone" />-->
     </LinearLayout>
 
     <LinearLayout
@@ -120,7 +90,7 @@
             android:layout_margin="8dp"
             android:text="@string/split_bill_text"
             android:textColor="@color/colorPrimary"
-            android:textSize="32sp"
+            android:textSize="24sp"
             android:thumbTextPadding="8dp" />
 
         <EditText
@@ -135,7 +105,7 @@
             android:importantForAutofill="no"
             android:inputType="number"
             android:maxLines="1"
-            android:textSize="32sp"
+            android:textSize="24sp"
             tools:ignore="LabelFor"
             tools:targetApi="O"
             tools:text="4" />
@@ -171,7 +141,7 @@
             android:hint="@string/bill_amount_text"
             android:text="@string/tip_amount_text"
             android:textColor="@color/colorPrimary"
-            android:textSize="32sp" />
+            android:textSize="24sp" />
 
         <EditText
             android:id="@+id/tipAmountDisplay"
@@ -185,7 +155,7 @@
             android:maxLines="1"
             android:textAlignment="viewEnd"
             android:textColor="@color/black"
-            android:textSize="32sp"
+            android:textSize="24sp"
             tools:ignore="LabelFor"
             tools:targetApi="O"
             tools:text="$25.00" />
@@ -211,7 +181,7 @@
             android:gravity="start"
             android:text="@string/divided_amount_text"
             android:textColor="@color/colorPrimary"
-            android:textSize="32sp" />
+            android:textSize="24sp" />
 
         <EditText
             android:id="@+id/dividedAmountDisplay"
@@ -225,7 +195,7 @@
             android:maxLines="1"
             android:textAlignment="viewEnd"
             android:textColor="@color/black"
-            android:textSize="32sp"
+            android:textSize="24sp"
             tools:ignore="LabelFor"
             tools:targetApi="O"
             tools:text="$37.50" />
@@ -251,7 +221,7 @@
             android:gravity="start"
             android:text="@string/total_amount_text"
             android:textColor="@color/colorPrimary"
-            android:textSize="32sp" />
+            android:textSize="24sp" />
 
         <EditText
             android:id="@+id/totalAmountDisplay"
@@ -265,7 +235,7 @@
             android:maxLines="1"
             android:textAlignment="viewEnd"
             android:textColor="@color/black"
-            android:textSize="32sp"
+            android:textSize="24sp"
             tools:ignore="LabelFor"
             tools:targetApi="O"
             tools:text="$150.00" />
