@@ -32,14 +32,16 @@ class MainActivity : AppCompatActivity() {
     private var ratingUseCount: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
+        currencyType = getCurrencyType()
 
         fab.setOnClickListener { view ->
             var cleanTotalAmount = totalAmountDisplay.text.toString()
             cleanTotalAmount = cleanTotalAmount.replace(",", "")
-            cleanTotalAmount = cleanTotalAmount.replace("$", "")
+            cleanTotalAmount = cleanTotalAmount.replace(currencyType, "")
 
             if (!TextUtils.isEmpty(totalAmountDisplay.text) && cleanTotalAmount.toFloat() > 0f) {
                 Snackbar.make(view, getString(R.string.snackbar_sending_message), Snackbar.LENGTH_LONG)
@@ -76,7 +78,23 @@ class MainActivity : AppCompatActivity() {
         tipPercentOptions.onItemSelectedListener =
             CustomOnItemSelectedListener(calculator, billAmountEntry, tipAmountDisplay)
 
+        setTipOptionViews()
         setTipPercentageToDefaultSelection(getDefaultTipPercentage())
+
+        optionPercentage.setOnClickListener {
+            setTipOptionViews()
+            tipAmountDisplay.setText(
+                calculator.calculateTip(
+                    billAmountEntry.text.toString(),
+                    tipPercentOptions.selectedItem.toString()
+                )
+            )
+        }
+
+        optionAmount.setOnClickListener {
+            setTipOptionViews()
+            tipPercentageValue.setText(calculateTipPercentage())
+        }
 
         billAmountEntry.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -92,7 +110,6 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 tipAmountDisplay.setText(
-//                    calculator.calculateTip(billAmountEntry.text.toString(), tipPercentageValue.text.toString())
                     calculator.calculateTip(billAmountEntry.text.toString(), tipPercentOptions.selectedItem.toString())
                 )
                 totalAmountDisplay.setText(
@@ -114,6 +131,14 @@ class MainActivity : AppCompatActivity() {
         })
 
         tipAmountDisplay.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                // Update the tip percentage field for custom amount
+                tipPercentageValue.setText(calculateTipPercentage())
+            }
+
             override fun afterTextChanged(s: Editable?) {
                 totalAmountDisplay.setText(
                     calculator.calculateTotal(
@@ -121,6 +146,7 @@ class MainActivity : AppCompatActivity() {
                         tipAmountDisplay.text.toString()
                     )
                 )
+
                 if (splitBillSwitch.isChecked) {
                     val splitNumber = if (TextUtils.isEmpty(numPayers.text)) "1" else numPayers.text.toString()
                     dividedAmountDisplay.setText(
@@ -132,13 +158,6 @@ class MainActivity : AppCompatActivity() {
                     )
                 }
             }
-
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            }
-
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            }
-
         })
 
         numPayers.addTextChangedListener(
@@ -176,6 +195,21 @@ class MainActivity : AppCompatActivity() {
         promptUserToRateApp()
     }
 
+    private fun calculateTipPercentage(): String {
+        return if (TextUtils.isEmpty(tipAmountDisplay.text) ||
+            tipAmountDisplay.text.toString().toFloat() == 0.00f ||
+            TextUtils.isEmpty(billAmountEntry.text)
+        ) {
+            "0.00 %"
+        } else {
+            String.format(
+                "%.02f",
+                ((tipAmountDisplay.text.toString().toFloat() / billAmountEntry.text.toString()
+                    .toFloat()) * 100)
+            ) + " %"
+        }
+    }
+
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.menu_main, menu)
@@ -188,7 +222,7 @@ class MainActivity : AppCompatActivity() {
         // as you specify a parent activity in AndroidManifest.xml.
         return when (item.itemId) {
             R.id.action_settings -> {
-                openTipDefaultPercentagePicker()
+                showTipDefaultPercentagePicker()
                 true
             }
             R.id.action_clear -> {
@@ -199,8 +233,23 @@ class MainActivity : AppCompatActivity() {
                 showAboutDialog()
                 true
             }
+            R.id.action_currency -> {
+                showCurrencySelectorDialog()
+                true
+            }
+            R.id.action_help -> {
+                showHowToUseInfo()
+                true
+            }
+            R.id.action_share_app -> {
+                sendSmsMessage(
+                    getString(R.string.app_name),
+                    getString(R.string.share_app_text) + "\n\n" + appStoreUrl
+                )
+                true
+            }
             R.id.action_rate_app -> {
-                showAppRatingDialog()
+                goToPlayStoreToRateApp()
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -213,8 +262,8 @@ class MainActivity : AppCompatActivity() {
         showKeyboard()
     }
 
-    private fun openTipDefaultPercentagePicker() {
-        val dialog = Dialog(this@MainActivity)
+    private fun showTipDefaultPercentagePicker() {
+        val dialog = Dialog(this)
         val tipPercentages = resources.getStringArray(R.array.string_percentages)
         val tipStringPercentages = Array(tipPercentages.size) { tipPercentages[0].toString() }
 
@@ -223,22 +272,70 @@ class MainActivity : AppCompatActivity() {
         }
 
         dialog.setContentView(R.layout.dialog_picker)
-        dialog.percentagePicker.displayedValues = tipStringPercentages
-        dialog.percentagePicker.minValue = 0
-        dialog.percentagePicker.maxValue = (tipStringPercentages.size - 1)
-        dialog.percentagePicker.value = 3
-        dialog.percentagePicker.wrapSelectorWheel = false
+        dialog.dialogPicker.displayedValues = tipStringPercentages
+        dialog.dialogPicker.minValue = 0
+        dialog.dialogPicker.maxValue = (tipStringPercentages.size - 1)
+        dialog.dialogPicker.value = FIFTEEN_PERCENT
+        dialog.dialogPicker.wrapSelectorWheel = false
+        dialog.setCancelable(false)
 
         dialog.setButton.setOnClickListener {
-            val selectedPref = tipStringPercentages[dialog.percentagePicker.value]
+            val selectedPref = tipStringPercentages[dialog.dialogPicker.value]
 
             setTipPercentageToDefaultSelection(selectedPref)
             setDefaultTipPercentage(selectedPref)
             dialog.dismiss()
         }
         dialog.cancelButton.setOnClickListener { dialog.dismiss() }
-
         dialog.show()
+    }
+
+    private fun showCurrencySelectorDialog() {
+        val dialog = Dialog(this)
+        val currencyType = resources.getStringArray(R.array.currency_types)
+        val currencyStrings = Array(currencyType.size) { currencyType[0].toString() }
+
+        for (x in currencyType.indices) {
+            currencyStrings[x] = currencyType[x].toString()
+        }
+
+        dialog.setContentView(R.layout.dialog_picker)
+        dialog.dialogTitle.text = resources.getString(R.string.currency_dialog_title)
+        dialog.dialogPicker.displayedValues = currencyStrings
+        dialog.dialogPicker.minValue = 0
+        dialog.dialogPicker.maxValue = (currencyStrings.size - 1)
+        dialog.dialogPicker.value = dialog.dialogPicker.minValue
+        dialog.dialogPicker.wrapSelectorWheel = false
+        dialog.setCancelable(false)
+
+        dialog.setButton.setOnClickListener {
+            setCurrencyType(currencyStrings[dialog.dialogPicker.value])
+            dialog.dismiss()
+        }
+        dialog.cancelButton.setOnClickListener { dialog.dismiss() }
+        dialog.show()
+    }
+
+    private fun showHowToUseInfo() {
+        val howToUse = Intent(this, HowToUseActivity::class.java)
+        startActivity(howToUse)
+    }
+
+    private fun setTipOptionViews() {
+        if (optionPercentage.isChecked) {
+            tipAmountDisplay.isEnabled = false
+            tipPercentOptions.visibility = View.VISIBLE
+            tipPercentageValue.visibility = View.GONE
+        } else {
+            tipAmountDisplay.apply {
+                isEnabled = true
+                requestFocus()
+                selectAll()
+                selectionStart
+            }
+            tipPercentOptions.visibility = View.GONE
+            tipPercentageValue.visibility = View.VISIBLE
+        }
     }
 
     private fun setTipPercentageToDefaultSelection(selectedPref: String) {
@@ -249,7 +346,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showAboutDialog() {
-        val builder = AlertDialog.Builder(this@MainActivity)
+        val builder = AlertDialog.Builder(this)
         builder.setTitle(R.string.about_dialog_title)
             .setMessage(R.string.about_dialog_text)
             .setIcon(R.drawable.ic_tally)
@@ -259,14 +356,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showBillSplittingDialog() {
-        val dialog = Dialog(this@MainActivity)
+        val dialog = Dialog(this)
         dialog.setContentView(R.layout.dialog_split_bill)
         dialog.setCancelable(false)
         dialog.okButton.setOnClickListener { dialog.dismiss() }
         dialog.show()
 
         dialog.checkBoxDontShowAgain.setOnCheckedChangeListener { _, isChecked ->
-            val prefs = this@MainActivity.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
+            val prefs = this.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
             val prefEditor = prefs.edit()
             prefEditor.putBoolean(SHOW_SPLIT_DIALOG, !isChecked)
             prefEditor.apply()
@@ -275,7 +372,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showAppRatingDialog() {
-        val builder = AlertDialog.Builder(this@MainActivity)
+        val builder = AlertDialog.Builder(this)
         builder.setTitle(R.string.rate_app_dialog_title)
             .setMessage(R.string.rate_app_dialog_text)
             .setIcon(R.drawable.ic_tally)
@@ -307,17 +404,37 @@ class MainActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-    private fun getDefaultTipPercentage(): String {
-        val sharedPref = this@MainActivity.getPreferences(Context.MODE_PRIVATE)
-        return with(sharedPref) { getString(DEFAULT_TIP_PERCENTAGE, "15")!! }
-    }
-
     private fun setDefaultTipPercentage(pref: String) {
-        val sharedPref = this@MainActivity.getPreferences(Context.MODE_PRIVATE) ?: return
+        val sharedPref = this.getPreferences(Context.MODE_PRIVATE) ?: return
         with(sharedPref.edit()) {
             putString(DEFAULT_TIP_PERCENTAGE, pref)
             apply()
         }
+    }
+
+    private fun getDefaultTipPercentage(): String {
+        val sharedPref = this.getPreferences(Context.MODE_PRIVATE)
+        return with(sharedPref) { getString(DEFAULT_TIP_PERCENTAGE, "15")!! }
+    }
+
+    private fun setCurrencyType(pref: String) {
+        val sharedPref = this.getPreferences(Context.MODE_PRIVATE) ?: return
+        with(sharedPref.edit()) {
+            putString(CURRENCY_TYPE, pref)
+            apply()
+        }
+        currencyType = pref
+        totalAmountDisplay.setText(
+            calculator.calculateTotal(
+                billAmountEntry.text.toString(),
+                tipAmountDisplay.text.toString()
+            )
+        )
+    }
+
+    private fun getCurrencyType(): String {
+        val sharedPref = this.getPreferences(Context.MODE_PRIVATE)
+        return with(sharedPref) { getString(CURRENCY_TYPE, "$")!! }
     }
 
     private fun clearFields() {
@@ -325,6 +442,7 @@ class MainActivity : AppCompatActivity() {
         setTipPercentageToDefaultSelection(getDefaultTipPercentage())
         numPayers.setText("")
         splitBillSwitch.isChecked = false
+        optionPercentage.performClick()
     }
 
     private fun showKeyboard() {
@@ -381,8 +499,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun constructTextMessage(): String {
         val billAmount = "Bill Amount:  ${billAmountEntry.text}\n"
-//        val tipAmount = "Tip Amount:  ${tipAmountDisplay.text} (${tipPercentageValue.text}%)\n"
-        val tipAmount = "Tip Amount:  ${tipAmountDisplay.text} (${tipPercentOptions.selectedItem})\n"
+        val tipAmount = when {
+            optionAmount.isChecked -> "Tip Amount:  ${tipAmountDisplay.text} (${tipPercentageValue.text})\n"
+            else -> "Tip Amount:  ${tipAmountDisplay.text} (${tipPercentOptions.selectedItem})\n"
+        }
         val totalAmount = "Total Amount:  ${totalAmountDisplay.text}\n"
         val singlePayer = TextUtils.isEmpty(numPayers.text)
         val numberOfPayers = if (!singlePayer) {
@@ -402,15 +522,19 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         private const val DEFAULT_TIP_PERCENTAGE = "defaultTipPercentage"
+        private const val CURRENCY_TYPE = "currencyType"
         private const val PREF_NAME = "com.hunterdev.tallyup"
         private const val USE_COUNT_FOR_RATING = "use_count"
         private const val APP_RATED = "app_rated"
         private const val SHOW_SPLIT_DIALOG = "show_split_dialog"
+        private const val FIFTEEN_PERCENT = 3
         private const val NUM_USES_BETWEEN_RATING_REQUEST = 5
         private const val appStoreUrl = "https://play.google.com/store/apps/details?id=com.hunterdev.tallyup"
 
         private var userRatedApp = false
         private var showSplitCheckDialog = true
+
+        var currencyType: String = ""
     }
 }
 

@@ -1,12 +1,12 @@
 package com.hunterdev.tallyup.logic
 
 import android.text.TextUtils
+import com.hunterdev.tallyup.activities.MainActivity
 import java.text.DecimalFormat
 
 class Calculations {
 
     private val decimalFormat = DecimalFormat("##,##0.00")
-    private val dollarFormat = DecimalFormat("$##,##0.00")
 
     fun calculateTip(billAmount: String = "", tipPercentage: String = ""): String {
         val cleanBillAmount = billAmount.replace(",", "")
@@ -28,7 +28,7 @@ class Calculations {
         val cleanTipAmount = tipAmount.replace(",", "")
 
         return if (TextUtils.isEmpty(cleanBillAmount) || TextUtils.isEmpty(cleanTipAmount)) {
-            "$0.00"
+            MainActivity.currencyType + "0.00"
         } else {
             return formatCurrency(cleanBillAmount.toFloat() + cleanTipAmount.toFloat())
         }
@@ -50,6 +50,7 @@ class Calculations {
     }
 
     fun formatCurrency(value: Float): String {
+        val dollarFormat = DecimalFormat(MainActivity.currencyType + "##,##0.00")
         return dollarFormat.format(value).toString()
     }
 }

@@ -11,12 +11,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="top|center"
-        android:text="@string/default_percentage_dialog_title"
+        android:text="@string/percentage_dialog_title"
         android:textSize="18sp"
         android:textStyle="bold" />
 
     <NumberPicker
-        android:id="@+id/percentagePicker"
+        android:id="@+id/dialogPicker"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
@@ -31,6 +31,7 @@
 
         <Button
             android:id="@+id/cancelButton"
+            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
@@ -42,6 +43,7 @@
 
         <Button
             android:id="@+id/setButton"
+            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"

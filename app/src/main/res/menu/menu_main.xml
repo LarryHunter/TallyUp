@@ -16,12 +16,41 @@
         app:showAsAction="ifRoom" />
 
     <item
-        android:id="@+id/action_about"
-        android:title="@string/action_about"
-        app:showAsAction="never" />
+        android:id="@+id/action_more"
+        android:icon="@drawable/ic_more"
+        android:title=""
+        app:showAsAction="always">
 
-    <item
-        android:id="@+id/action_rate_app"
-        android:title="@string/action_rate_app"
-        app:showAsAction="never" />
+        <menu>
+            <item
+                android:id="@+id/action_about"
+                android:icon="@drawable/ic_info"
+                android:title="@string/action_about"
+                app:showAsAction="ifRoom" />
+
+            <item
+                android:id="@+id/action_currency"
+                android:icon="@drawable/ic_currency"
+                android:title="@string/action_currency"
+                app:showAsAction="ifRoom" />
+
+            <item
+                android:id="@+id/action_help"
+                android:icon="@drawable/ic_help"
+                android:title="@string/action_help"
+                app:showAsAction="ifRoom" />
+
+            <item
+                android:id="@+id/action_rate_app"
+                android:icon="@drawable/ic_rate"
+                android:title="@string/action_rate_app"
+                app:showAsAction="ifRoom" />
+
+            <item
+                android:id="@+id/action_share_app"
+                android:icon="@drawable/ic_share"
+                android:title="@string/action_share_app"
+                app:showAsAction="ifRoom" />
+        </menu>
+    </item>
 </menu>

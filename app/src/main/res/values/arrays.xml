@@ -62,4 +62,19 @@
         <item>95</item>
         <item>100</item>
     </integer-array>
+
+    <string-array name="currency_types">
+        <item>&#36;</item>
+        // dollar
+        <item>&#8364;</item>
+        // euro
+        <item>&#163;</item>
+        // pound
+        <item>&#165;</item>
+        // yen
+        <item>&#8381;</item>
+        // ruble
+        <item>&#8377;</item>
+        // indian rupee
+    </string-array>
 </resources>

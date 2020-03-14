@@ -1,5 +1,5 @@
 <!DOCTYPE
-    resources [<!ENTITY copyright "Copyright © 2019 Hunter Dev">]
+    resources [<!ENTITY copyright "Copyright © 2019-2020 Hunter Dev">]
     >
 
 <resources>
@@ -7,7 +7,10 @@
     <string name="action_settings">Set Default Tip %</string>
     <string name="action_clear">Clear Fields</string>
     <string name="action_about">About</string>
+    <string name="action_currency">Currency Type</string>
+    <string name="action_help">How To Use</string>
     <string name="action_rate_app">Rate App</string>
+    <string name="action_share_app">Share App</string>
 
     <string name="button_text_ok">OK</string>
     <string name="button_text_set">Set</string>
@@ -16,12 +19,15 @@
     <string name="button_text_no">No</string>
     <string name="button_text_later">Later</string>
 
+    <string name="option_text_percent">Tip Percentage</string>
+    <string name="option_text_amount">Tip Amount</string>
+
     <string name="percent">%</string>
     <string name="copyright">&copyright;</string>
 
     <string name="snackbar_sending_message">Sending message…</string>
     <string name="snackbar_no_data_message">No data to send</string>
-    <string name="bill_amount_text">Bill Amount:</string>
+    <string name="bill_amount_title">Bill Amount:</string>
     <string name="tip_amount_text">Tip Amount:</string>
     <string name="tip_percentage_text">Tip Percent:</string>
     <string name="split_bill_text">Split Bill?</string>
@@ -31,13 +37,27 @@
     <string name="split_bill_dialog_title">Split the Bill</string>
     <string name="split_bill_dialog_text">Enter the number of people splitting this bill.</string>
     <string name="do_not_show_again_dialog_text">Don\'t show again</string>
-    <string name="default_percentage_dialog_title">Set Default Tip Percentage</string>
+    <string name="percentage_dialog_title">Set Default Tip Percentage</string>
+    <string name="currency_dialog_title">Set Currency Type</string>
 
     <string name="about_dialog_title">About Tally Up</string>
+    <string name="share_app_text">Check out \'Tally Up\'…\nit\'s a tip calculator and a bill splitting utility. It makes calculating the tip and dividing up the bill among a group easier than ever.</string>
     <string name="about_dialog_text">\n\'Tally Up\' is a tip calculator and a bill splitting utility. It makes calculating the tip and dividing up the bill among a group easier than ever.\n\nPlease use and enjoy.\n\n\n&copyright;</string>
 
+    <string name="percentages_selector_prompt">Choose a percentage value.</string>
+    <string name="tip_options_text">Tip Options</string>
     <string name="rate_app_dialog_title">Rate Tally Up?</string>
     <string name="rate_app_dialog_text">Please consider rating \'Tally Up\' and possibly providing feedback?\n\nBy giving constructive feedback you help create the best possible experience for all users.</string>
-    <string name="percentages_selector_prompt">Choose a percentage value.</string>
 
+    <string name="how_to_use_text">To start using \'Tally Up\' tip calculator and bill splitting utility simply enter the total bill amount and then either choose a percentage for the tip or choose a specific amount to tip.\n\nOnce the tip is decided on, you can choose if the bill is going to be split amount a group. If so, then select the \'Split Bill\' option and enter the number of people that will be splitting the check.\n\nAfter the bill has been calculated, you can then text a detailed copy of the bill to all parties paying.</string>
+    <string name="bill_amount_info_title">Bill Amount</string>
+    <string name="bill_amount_text">The total amount of the bill including tax.</string>
+    <string name="tip_option_text">Tip Percentage or Amount</string>
+    <string name="tip_amount_info_text">Can be either a percentage of the total bill or a specified amount.</string>
+    <string name="split_bill_title">Split Bill</string>
+    <string name="split_bill_info_text">Choose if the bill is being split with others and how many people are splitting it.</string>
+    <string name="split_amount_title">Split Amount</string>
+    <string name="split_amount_info_text">If the bill is being split with others, this shows how much each person should pay.</string>
+    <string name="total_bill_title">Total Bill</string>
+    <string name="total_bill_info_text">This shows the total bill including tax and tip that can be divided up among multiple people.</string>
 </resources>

@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -24,8 +25,8 @@
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
             android:gravity="end"
-            android:hint="@string/bill_amount_text"
-            android:text="@string/bill_amount_text"
+            android:hint="@string/bill_amount_title"
+            android:text="@string/bill_amount_title"
             android:textColor="@color/colorPrimary"
             android:textSize="24sp" />
 
@@ -46,22 +47,52 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/tipPercentageLayout"
+        android:id="@+id/tipOptionLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/billAmountLayout">
 
-        <TextView
-            android:id="@+id/tipPercentText"
-            android:layout_width="wrap_content"
+        <RadioGroup
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:gravity="end"
-            android:text="@string/tip_percentage_text"
-            android:textColor="@color/colorPrimary"
-            android:textSize="24sp" />
+            android:orientation="vertical">
+
+            <RadioButton
+                android:id="@+id/optionPercentage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:focusable="false"
+                android:text="@string/option_text_percent" />
+
+            <RadioButton
+                android:id="@+id/optionAmount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:focusable="false"
+                android:text="@string/option_text_amount" />
+        </RadioGroup>
+
+        <EditText
+            android:id="@+id/tipPercentageValue"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:layout_weight="1"
+            android:enabled="false"
+            android:gravity="center_horizontal"
+            android:importantForAutofill="no"
+            android:inputType="numberDecimal"
+            android:maxLines="1"
+            android:textColor="@color/black"
+            android:textSize="24sp"
+            tools:ignore="LabelFor"
+            tools:targetApi="O"
+            tools:text="10.00 %" />
 
         <Spinner
             android:id="@+id/tipPercentOptions"
@@ -72,7 +103,8 @@
             android:layout_marginBottom="8dp"
             android:layout_weight="1"
             android:entries="@array/string_percentages"
-            android:prompt="@string/percentages_selector_prompt" />
+            android:prompt="@string/percentages_selector_prompt"
+            android:visibility="gone" />
     </LinearLayout>
 
     <LinearLayout
@@ -81,7 +113,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tipPercentageLayout">
+        app:layout_constraintTop_toBottomOf="@id/tipOptionLayout">
 
         <Switch
             android:id="@+id/splitBillSwitch"
@@ -138,7 +170,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
             android:gravity="end"
-            android:hint="@string/bill_amount_text"
+            android:hint="@string/bill_amount_title"
             android:text="@string/tip_amount_text"
             android:textColor="@color/colorPrimary"
             android:textSize="24sp" />
