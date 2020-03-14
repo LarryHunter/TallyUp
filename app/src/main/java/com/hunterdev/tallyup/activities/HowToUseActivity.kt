@@ -7,6 +7,7 @@ import com.hunterdev.tallyup.R
 class HowToUseActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_how_to_use)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
