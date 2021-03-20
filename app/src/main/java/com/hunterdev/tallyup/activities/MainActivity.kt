@@ -25,6 +25,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
 import kotlinx.android.synthetic.main.dialog_picker.*
 import kotlinx.android.synthetic.main.dialog_split_bill.*
+import java.text.NumberFormat
 
 class MainActivity : AppCompatActivity() {
 
@@ -197,15 +198,15 @@ class MainActivity : AppCompatActivity() {
 
     private fun calculateTipPercentage(): String {
         return if (TextUtils.isEmpty(tipAmountDisplay.text) ||
-            tipAmountDisplay.text.toString().toFloat() == 0.00f ||
+            NumberFormat.getInstance().parse(tipAmountDisplay.text.toString())!!.toFloat() == 0.00f ||
             TextUtils.isEmpty(billAmountEntry.text)
         ) {
             "0.00 %"
         } else {
             String.format(
                 "%.02f",
-                ((tipAmountDisplay.text.toString().toFloat() / billAmountEntry.text.toString()
-                    .toFloat()) * 100)
+                ((NumberFormat.getInstance().parse(tipAmountDisplay.text.toString())!!.toFloat() /
+                        NumberFormat.getInstance().parse(billAmountEntry.text.toString())!!.toFloat()) * 100)
             ) + " %"
         }
     }
