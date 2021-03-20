@@ -40,6 +40,7 @@
             android:importantForAutofill="no"
             android:inputType="numberDecimal"
             android:maxLines="1"
+            android:maxLength="10"
             android:textSize="24sp"
             tools:ignore="LabelFor"
             tools:targetApi="O"
@@ -115,7 +116,7 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tipOptionLayout">
 
-        <Switch
+        <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/splitBillSwitch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
