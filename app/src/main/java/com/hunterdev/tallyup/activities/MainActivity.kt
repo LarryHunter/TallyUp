@@ -6,7 +6,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
-import android.text.TextUtils
+import android.text.InputType
 import android.text.TextWatcher
 import android.view.Menu
 import android.view.MenuItem
@@ -18,12 +18,12 @@ import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
 import android.widget.EditText
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
 import com.hunterdev.tallyup.R
 import com.hunterdev.tallyup.logic.Calculations
+import com.hunterdev.tallyup.logic.EmailBuilder
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
 import kotlinx.android.synthetic.main.dialog_picker.*
@@ -34,15 +34,10 @@ class MainActivity : AppCompatActivity() {
 
     private val calculator = Calculations()
     private var ratingUseCount: Int = 0
-
-    private val rotateOpen: Animation by lazy { AnimationUtils.loadAnimation(this, R.anim.rotate_open_anim) }
-    private val rotateClose: Animation by lazy { AnimationUtils.loadAnimation(this, R.anim.rotate_close_anim) }
-    private val fromBottom: Animation by lazy { AnimationUtils.loadAnimation(this, R.anim.from_bottom_anin) }
-    private val toBottom: Animation by lazy { AnimationUtils.loadAnimation(this, R.anim.to_bottom_anim) }
+    private var location = ""
     private var clicked = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
-
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
@@ -53,24 +48,46 @@ class MainActivity : AppCompatActivity() {
         }
 
         fab_text.setOnClickListener { view ->
-            var cleanTotalAmount = totalAmountDisplay.text.toString()
-            cleanTotalAmount = cleanTotalAmount.replace(",", "")
-            cleanTotalAmount = cleanTotalAmount.replace(currencyType, "")
-
-            if (!TextUtils.isEmpty(totalAmountDisplay.text) && cleanTotalAmount.toFloat() > 0f) {
-                Snackbar.make(view, getString(R.string.snackbar_sending_message), Snackbar.LENGTH_LONG)
-                    .setAction(R.string.button_text_ok) {}
+            if (totalAmountDisplay.text.isNotEmpty() && getMessageValues() > 0f) {
+                Snackbar.make(
+                    view,
+                    getString(R.string.snackbar_sending_text_msg),
+                    Snackbar.LENGTH_INDEFINITE
+                ).setAction(R.string.button_text_ok) {}
                     .show()
-                sendSmsMessage(constructSubject(), constructTextMessage())
+                sendSmsMessage(constructSubject(), constructMessage())
             } else {
-                Snackbar.make(view, getString(R.string.snackbar_no_data_message), Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show()
+                Snackbar.make(
+                    view,
+                    getString(R.string.snackbar_no_data_message),
+                    Snackbar.LENGTH_LONG
+                ).setAction("Action", null).show()
             }
-            Toast.makeText(this, "Text button clicked", Toast.LENGTH_SHORT).show()
         }
 
-        fab_email.setOnClickListener {
-            Toast.makeText(this, "Email button clicked", Toast.LENGTH_SHORT).show()
+        fab_email.setOnClickListener { view ->
+//            if (location.isEmpty()) {
+//                promptForLocationName()
+//            } else {
+                if (totalAmountDisplay.text.isNotEmpty() && getMessageValues() > 0f) {
+                    Snackbar.make(
+                        view,
+                        getString(R.string.snackbar_sending_email_msg),
+                        Snackbar.LENGTH_INDEFINITE
+                    )
+                        .setAction(R.string.button_text_ok) {}
+                        .show()
+                    constructEmail(constructMessage(), location)
+                } else {
+                    Snackbar.make(
+                        view,
+                        getString(R.string.snackbar_no_data_message),
+                        Snackbar.LENGTH_LONG
+                    )
+                        .setAction("Action", null)
+                        .show()
+                }
+//            }
         }
 
         dividedAmountLayout.visibility = View.GONE
@@ -92,7 +109,11 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        val listAdapter = ArrayAdapter.createFromResource(this, R.array.string_percentages, R.layout.spinner_style)
+        val listAdapter = ArrayAdapter.createFromResource(
+            this,
+            R.array.string_percentages,
+            R.layout.spinner_style
+        )
         tipPercentOptions.adapter = listAdapter
         tipPercentOptions.onItemSelectedListener =
             CustomOnItemSelectedListener(calculator, billAmountEntry, tipAmountDisplay)
@@ -129,14 +150,21 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 tipAmountDisplay.setText(
-                    calculator.calculateTip(billAmountEntry.text.toString(), tipPercentOptions.selectedItem.toString())
+                    calculator.calculateTip(
+                        billAmountEntry.text.toString(),
+                        tipPercentOptions.selectedItem.toString()
+                    )
                 )
                 totalAmountDisplay.setText(
-                    calculator.calculateTotal(billAmountEntry.text.toString(), tipAmountDisplay.text.toString())
+                    calculator.calculateTotal(
+                        billAmountEntry.text.toString(),
+                        tipAmountDisplay.text.toString()
+                    )
                 )
                 if (splitBillSwitch.isChecked) {
-                    if (!TextUtils.isEmpty(numPayers.text)) {
-                        val splitNumber = if (TextUtils.isEmpty(numPayers.text)) "1" else numPayers.text.toString()
+                    if (numPayers.text.isNotEmpty()) {
+                        val splitNumber =
+                            if (numPayers.text.isEmpty()) "1" else numPayers.text.toString()
                         dividedAmountDisplay.setText(
                             calculator.calculateDividedAmount(
                                 billAmountEntry.text.toString(),
@@ -167,7 +195,8 @@ class MainActivity : AppCompatActivity() {
                 )
 
                 if (splitBillSwitch.isChecked) {
-                    val splitNumber = if (TextUtils.isEmpty(numPayers.text)) "1" else numPayers.text.toString()
+                    val splitNumber =
+                        if (numPayers.text.isEmpty()) "1" else numPayers.text.toString()
                     dividedAmountDisplay.setText(
                         calculator.calculateDividedAmount(
                             billAmountEntry.text.toString(),
@@ -187,8 +216,8 @@ class MainActivity : AppCompatActivity() {
                 override fun onTextChanged(s: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 }
 
-                override fun afterTextChanged(s: Editable?) {
-                    if (!TextUtils.isEmpty(s)) {
+                override fun afterTextChanged(text: Editable?) {
+                    if (text != null && text.isNotEmpty()) {
                         dividedAmountDisplay.setText(
                             calculator.calculateDividedAmount(
                                 billAmountEntry.text.toString(),
@@ -204,8 +233,12 @@ class MainActivity : AppCompatActivity() {
             if (hasFocus) {
                 showKeyboard()
             } else {
-                if (!TextUtils.isEmpty(billAmountEntry.text)) {
-                    billAmountEntry.setText(calculator.formatDecimal(billAmountEntry.text.toString().toFloat()))
+                if (billAmountEntry.text.isNotEmpty()) {
+                    billAmountEntry.setText(
+                        calculator.formatDecimal(
+                            billAmountEntry.text.toString().toFloat()
+                        )
+                    )
                 }
             }
         }
@@ -213,6 +246,54 @@ class MainActivity : AppCompatActivity() {
         getPreferences()
         promptUserToRateApp()
     }
+
+    private val rotateOpen: Animation by lazy {
+        AnimationUtils.loadAnimation(this, R.anim.rotate_open_anim)
+    }
+
+    private val rotateClose: Animation by lazy {
+        AnimationUtils.loadAnimation(this, R.anim.rotate_close_anim)
+    }
+
+    private val fromBottom: Animation by lazy {
+        AnimationUtils.loadAnimation(this, R.anim.from_bottom_anin)
+    }
+
+    private val toBottom: Animation by lazy {
+        AnimationUtils.loadAnimation(this, R.anim.to_bottom_anim)
+    }
+
+    private fun getMessageValues(): Float {
+        var cleanTotalAmount = totalAmountDisplay.text.toString()
+        cleanTotalAmount = cleanTotalAmount.replace(",", "")
+        cleanTotalAmount = cleanTotalAmount.replace(currencyType, "")
+        return cleanTotalAmount.toFloat()
+    }
+
+    private fun constructEmail(message: String, location: String) {
+        val email: Intent = EmailBuilder.createEmailIntent(location)
+        email.putExtra(Intent.EXTRA_TEXT, message)
+        startActivity(Intent.createChooser(email, getString(R.string.choose_an_email_client)))
+        onShareButtonClicked()
+    }
+
+//    private fun promptForLocationName() {
+//        val builder = AlertDialog.Builder(this)
+//        builder.setTitle("Enter location name...")
+//
+//        val input = EditText(this)
+//        input.inputType = InputType.TYPE_CLASS_TEXT
+//        builder.setView(input)
+//
+//        builder.setPositiveButton(getString(R.string.button_text_ok)) { _, _ ->
+//            location = input.text.toString()
+//            fab_share.callOnClick()
+//        }
+//        builder.setNegativeButton(
+//            "Cancel"
+//        ) { dialog, _ -> dialog.cancel() }
+//        builder.show()
+//    }
 
     private fun onShareButtonClicked() {
         setVisibility(clicked)
@@ -254,9 +335,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun calculateTipPercentage(): String {
-        return if (TextUtils.isEmpty(tipAmountDisplay.text) ||
+        return if (tipAmountDisplay.text.isEmpty() ||
             NumberFormat.getInstance().parse(tipAmountDisplay.text.toString())!!.toFloat() == 0.00f ||
-            TextUtils.isEmpty(billAmountEntry.text)
+            billAmountEntry.text.isEmpty()
         ) {
             "0.00 %"
         } else {
@@ -397,7 +478,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setTipPercentageToDefaultSelection(selectedPref: String) {
-        val listAdapter = ArrayAdapter.createFromResource(this, R.array.string_percentages, R.layout.spinner_style)
+        val listAdapter = ArrayAdapter.createFromResource(
+            this,
+            R.array.string_percentages,
+            R.layout.spinner_style
+        )
         tipPercentOptions.adapter = listAdapter
         val spinnerPosition = listAdapter.getPosition(selectedPref)
         tipPercentOptions.setSelection(spinnerPosition)
@@ -501,16 +586,12 @@ class MainActivity : AppCompatActivity() {
         numPayers.setText("")
         splitBillSwitch.isChecked = false
         optionPercentage.performClick()
+        location = ""
     }
 
     private fun showKeyboard() {
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
     }
-
-//    private fun hideKeyboard() {
-//        val inputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
-//        inputMethodManager.hideSoftInputFromWindow(currentFocus!!.windowToken, 0)
-//    }
 
     private fun getPreferences() {
         val prefs = this.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
@@ -549,27 +630,32 @@ class MainActivity : AppCompatActivity() {
         smsIntent.putExtra(Intent.EXTRA_SUBJECT, subject)
         smsIntent.putExtra("sms_body", message)
         startActivity(smsIntent)
+        onShareButtonClicked()
     }
 
     private fun constructSubject(): String {
         return "\'Tally Up\' bill calculation\n"
     }
 
-    private fun constructTextMessage(): String {
+    private fun constructMessage(): String {
         val billAmount = "Bill Amount:  ${billAmountEntry.text}\n"
         val tipAmount = when {
             optionAmount.isChecked -> "Tip Amount:  ${tipAmountDisplay.text} (${tipPercentageValue.text})\n"
             else -> "Tip Amount:  ${tipAmountDisplay.text} (${tipPercentOptions.selectedItem})\n"
         }
         val totalAmount = "Total Amount:  ${totalAmountDisplay.text}\n"
-        val singlePayer = TextUtils.isEmpty(numPayers.text)
+        val singlePayer = numPayers.text.isEmpty()
         val numberOfPayers = if (!singlePayer) {
             "Number of people:  ${numPayers.text}\n"
         } else {
             "\n"
         }
         val eachPays = if (!singlePayer) {
-            "Each person pays:  ${calculator.formatCurrency(dividedAmountDisplay.text.toString().toFloat())}\n\n"
+            "Each person pays:  ${
+                calculator.formatCurrency(
+                    dividedAmountDisplay.text.toString().toFloat()
+                )
+            }\n\n"
         } else {
             "\n"
         }
@@ -587,7 +673,8 @@ class MainActivity : AppCompatActivity() {
         private const val SHOW_SPLIT_DIALOG = "show_split_dialog"
         private const val FIFTEEN_PERCENT = 3
         private const val NUM_USES_BETWEEN_RATING_REQUEST = 5
-        private const val appStoreUrl = "https://play.google.com/store/apps/details?id=com.hunterdev.tallyup"
+        private const val appStoreUrl =
+            "https://play.google.com/store/apps/details?id=com.hunterdev.tallyup"
 
         private var userRatedApp = false
         private var showSplitCheckDialog = true

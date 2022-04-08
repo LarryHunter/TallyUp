@@ -30,7 +30,9 @@
     <string name="percent">%</string>
     <string name="copyright">&copyright;</string>
 
-    <string name="snackbar_sending_message">Sending message…</string>
+    <string name="choose_an_email_client">Choose an email client: </string>
+    <string name="snackbar_sending_text_msg">Text message sent</string>
+    <string name="snackbar_sending_email_msg">Email message sent</string>
     <string name="snackbar_no_data_message">No data to send</string>
     <string name="bill_amount_title">Bill Amount:</string>
     <string name="tip_amount_text">Tip Amount:</string>
