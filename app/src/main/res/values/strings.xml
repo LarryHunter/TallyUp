@@ -1,9 +1,14 @@
 <!DOCTYPE
-    resources [<!ENTITY copyright "Copyright © 2019-2020 Hunter Dev">]
+    resources [<!ENTITY copyright "Copyright © 2019-2022 Hunter Dev">]
     >
 
 <resources>
     <string name="app_name">Tally Up</string>
+
+    <string name="share_bill">Share</string>
+    <string name="text_msg_bill">Share bill via text message</string>
+    <string name="email_bill">Share bill via email</string>
+
     <string name="action_settings">Set Default Tip %</string>
     <string name="action_clear">Clear Fields</string>
     <string name="action_about">About</string>
@@ -25,7 +30,9 @@
     <string name="percent">%</string>
     <string name="copyright">&copyright;</string>
 
-    <string name="snackbar_sending_message">Sending message…</string>
+    <string name="choose_an_email_client">Choose an email client: </string>
+    <string name="snackbar_sending_text_msg">Text message sent</string>
+    <string name="snackbar_sending_email_msg">Email message sent</string>
     <string name="snackbar_no_data_message">No data to send</string>
     <string name="bill_amount_title">Bill Amount:</string>
     <string name="tip_amount_text">Tip Amount:</string>
