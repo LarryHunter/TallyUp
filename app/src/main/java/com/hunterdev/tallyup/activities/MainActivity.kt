@@ -12,10 +12,13 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.WindowManager
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
 import android.widget.EditText
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
@@ -32,6 +35,12 @@ class MainActivity : AppCompatActivity() {
     private val calculator = Calculations()
     private var ratingUseCount: Int = 0
 
+    private val rotateOpen: Animation by lazy { AnimationUtils.loadAnimation(this, R.anim.rotate_open_anim) }
+    private val rotateClose: Animation by lazy { AnimationUtils.loadAnimation(this, R.anim.rotate_close_anim) }
+    private val fromBottom: Animation by lazy { AnimationUtils.loadAnimation(this, R.anim.from_bottom_anin) }
+    private val toBottom: Animation by lazy { AnimationUtils.loadAnimation(this, R.anim.to_bottom_anim) }
+    private var clicked = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
@@ -39,7 +48,11 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         currencyType = getCurrencyType()
 
-        fab.setOnClickListener { view ->
+        fab_share.setOnClickListener {
+            onShareButtonClicked()
+        }
+
+        fab_text.setOnClickListener { view ->
             var cleanTotalAmount = totalAmountDisplay.text.toString()
             cleanTotalAmount = cleanTotalAmount.replace(",", "")
             cleanTotalAmount = cleanTotalAmount.replace(currencyType, "")
@@ -53,6 +66,11 @@ class MainActivity : AppCompatActivity() {
                 Snackbar.make(view, getString(R.string.snackbar_no_data_message), Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show()
             }
+            Toast.makeText(this, "Text button clicked", Toast.LENGTH_SHORT).show()
+        }
+
+        fab_email.setOnClickListener {
+            Toast.makeText(this, "Email button clicked", Toast.LENGTH_SHORT).show()
         }
 
         dividedAmountLayout.visibility = View.GONE
@@ -194,6 +212,45 @@ class MainActivity : AppCompatActivity() {
 
         getPreferences()
         promptUserToRateApp()
+    }
+
+    private fun onShareButtonClicked() {
+        setVisibility(clicked)
+        setAnimation(clicked)
+        setClickable(clicked)
+        clicked = !clicked
+    }
+
+    private fun setClickable(clicked: Boolean) {
+        if (!clicked) {
+            fab_email.isClickable = true
+            fab_text.isClickable = true
+        } else {
+            fab_email.isClickable = false
+            fab_text.isClickable = false
+        }
+    }
+
+    private fun setVisibility(clicked: Boolean) {
+        if (!clicked) {
+            fab_email.visibility = View.VISIBLE
+            fab_text.visibility = View.VISIBLE
+        } else {
+            fab_email.visibility = View.INVISIBLE
+            fab_text.visibility = View.INVISIBLE
+        }
+    }
+
+    private fun setAnimation(clicked: Boolean) {
+        if (!clicked) {
+            fab_email.startAnimation(fromBottom)
+            fab_text.startAnimation(fromBottom)
+            fab_share.startAnimation(rotateOpen)
+        } else {
+            fab_email.startAnimation(toBottom)
+            fab_text.startAnimation(toBottom)
+            fab_share.startAnimation(rotateClose)
+        }
     }
 
     private fun calculateTipPercentage(): String {
