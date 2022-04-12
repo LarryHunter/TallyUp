@@ -9,6 +9,7 @@
     <string name="text_msg_bill">Share bill via text message</string>
     <string name="email_bill">Share bill via email</string>
 
+    <string name="venue_title">Venue:</string>
     <string name="action_settings">Set Default Tip %</string>
     <string name="action_clear">Clear Fields</string>
     <string name="action_about">About</string>
@@ -56,7 +57,7 @@
     <string name="rate_app_dialog_title">Rate Tally Up?</string>
     <string name="rate_app_dialog_text">Please consider rating \'Tally Up\' and possibly providing feedback?\n\nBy giving constructive feedback you help create the best possible experience for all users.</string>
 
-    <string name="how_to_use_text">To start using \'Tally Up\' tip calculator and bill splitting utility simply enter the total bill amount and then either choose a percentage for the tip or choose a specific amount to tip.\n\nOnce the tip is decided on, you can choose if the bill is going to be split amount a group. If so, then select the \'Split Bill\' option and enter the number of people that will be splitting the check.\n\nAfter the bill has been calculated, you can then text a detailed copy of the bill to all parties paying.</string>
+    <string name="how_to_use_text">To start using \'Tally Up\' tip calculator and bill splitting utility simply enter the total bill amount and then either choose a percentage for the tip or choose a specific amount to tip.\n\nOnce the tip is decided on, you can choose if the bill is going to be split amount a group. If so, then select the \'Split Bill\' option and enter the number of people that will be splitting the check.\n\nAfter the bill has been calculated, you can then text or email a detailed copy of the bill to all parties paying.</string>
     <string name="bill_amount_info_title">Bill Amount</string>
     <string name="bill_amount_text">The total amount of the bill including tax.</string>
     <string name="tip_option_text">Tip Percentage or Amount</string>

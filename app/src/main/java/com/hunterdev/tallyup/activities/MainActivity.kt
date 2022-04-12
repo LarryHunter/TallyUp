@@ -6,7 +6,6 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
-import android.text.InputType
 import android.text.TextWatcher
 import android.view.Menu
 import android.view.MenuItem
@@ -34,7 +33,6 @@ class MainActivity : AppCompatActivity() {
 
     private val calculator = Calculations()
     private var ratingUseCount: Int = 0
-    private var location = ""
     private var clicked = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -66,9 +64,6 @@ class MainActivity : AppCompatActivity() {
         }
 
         fab_email.setOnClickListener { view ->
-//            if (location.isEmpty()) {
-//                promptForLocationName()
-//            } else {
                 if (totalAmountDisplay.text.isNotEmpty() && getMessageValues() > 0f) {
                     Snackbar.make(
                         view,
@@ -77,7 +72,7 @@ class MainActivity : AppCompatActivity() {
                     )
                         .setAction(R.string.button_text_ok) {}
                         .show()
-                    constructEmail(constructMessage(), location)
+                    constructEmail(constructMessage(), venueEntry.text.toString())
                 } else {
                     Snackbar.make(
                         view,
@@ -87,7 +82,6 @@ class MainActivity : AppCompatActivity() {
                         .setAction("Action", null)
                         .show()
                 }
-//            }
         }
 
         dividedAmountLayout.visibility = View.GONE
@@ -245,7 +239,16 @@ class MainActivity : AppCompatActivity() {
 
         getPreferences()
         promptUserToRateApp()
+        // The code below was in onResume... keep an eye out for odd behavior
+        venueEntry.requestFocus()
+        showKeyboard()
     }
+
+//    override fun onResume() {
+//        super.onResume()
+//        venueEntry.requestFocus()
+//        showKeyboard()
+//    }
 
     private val rotateOpen: Animation by lazy {
         AnimationUtils.loadAnimation(this, R.anim.rotate_open_anim)
@@ -276,24 +279,6 @@ class MainActivity : AppCompatActivity() {
         startActivity(Intent.createChooser(email, getString(R.string.choose_an_email_client)))
         onShareButtonClicked()
     }
-
-//    private fun promptForLocationName() {
-//        val builder = AlertDialog.Builder(this)
-//        builder.setTitle("Enter location name...")
-//
-//        val input = EditText(this)
-//        input.inputType = InputType.TYPE_CLASS_TEXT
-//        builder.setView(input)
-//
-//        builder.setPositiveButton(getString(R.string.button_text_ok)) { _, _ ->
-//            location = input.text.toString()
-//            fab_share.callOnClick()
-//        }
-//        builder.setNegativeButton(
-//            "Cancel"
-//        ) { dialog, _ -> dialog.cancel() }
-//        builder.show()
-//    }
 
     private fun onShareButtonClicked() {
         setVisibility(clicked)
@@ -393,12 +378,6 @@ class MainActivity : AppCompatActivity() {
             }
             else -> super.onOptionsItemSelected(item)
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        billAmountEntry.requestFocus()
-        showKeyboard()
     }
 
     private fun showTipDefaultPercentagePicker() {
@@ -581,12 +560,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun clearFields() {
+        venueEntry.setText("")
         billAmountEntry.setText("")
-        setTipPercentageToDefaultSelection(getDefaultTipPercentage())
         numPayers.setText("")
+        setTipPercentageToDefaultSelection(getDefaultTipPercentage())
         splitBillSwitch.isChecked = false
         optionPercentage.performClick()
-        location = ""
     }
 
     private fun showKeyboard() {
@@ -638,6 +617,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun constructMessage(): String {
+        val venueName = "${venueEntry.text}\n"
         val billAmount = "Bill Amount:  ${billAmountEntry.text}\n"
         val tipAmount = when {
             optionAmount.isChecked -> "Tip Amount:  ${tipAmountDisplay.text} (${tipPercentageValue.text})\n"
@@ -661,7 +641,7 @@ class MainActivity : AppCompatActivity() {
         }
         val appInfo = "Calculated with \'Tally Up\'\n"
         val appLink = appStoreUrl
-        return "$billAmount$tipAmount$totalAmount$numberOfPayers$eachPays$appInfo$appLink"
+        return "$venueName$billAmount$tipAmount$totalAmount$numberOfPayers$eachPays$appInfo$appLink"
     }
 
     companion object {
