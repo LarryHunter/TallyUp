@@ -12,7 +12,7 @@ import java.util.*
 open class EmailBuilder {
     companion object {
         fun createEmailIntent(location: String): Intent {
-            val subject = "\'Tally Up\' shared bill calculation" // from $location"
+            val subject = "$location Shared Bill Information"
             val email = Intent(Intent.ACTION_SENDTO)
             email.putExtra(Intent.EXTRA_SUBJECT, subject)
             email.type = "message/rfc822"
