@@ -23,11 +23,10 @@ import com.google.android.material.snackbar.Snackbar
 import com.hunterdev.tallyup.R
 import com.hunterdev.tallyup.logic.Calculations
 import com.hunterdev.tallyup.logic.EmailBuilder
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.content_main.*
-import kotlinx.android.synthetic.main.dialog_picker.*
-import kotlinx.android.synthetic.main.dialog_split_bill.*
 import java.text.NumberFormat
+import com.hunterdev.tallyup.databinding.ActivityMainBinding
+import com.hunterdev.tallyup.databinding.DialogPickerBinding
+import com.hunterdev.tallyup.databinding.DialogSplitBillBinding
 
 class MainActivity : AppCompatActivity() {
 
@@ -35,18 +34,25 @@ class MainActivity : AppCompatActivity() {
     private var ratingUseCount: Int = 0
     private var clicked = false
 
+    private lateinit var binding: ActivityMainBinding
+    private lateinit var dialogPickerBinding: DialogPickerBinding
+    private lateinit var dialogSplitBinder: DialogSplitBillBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
+//        WindowCompat.setDecorFitsSystemWindows(window, false)
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        setSupportActionBar(toolbar)
+
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        setSupportActionBar(binding.toolbar)
         currencyType = getCurrencyType()
 
-        fab_share.setOnClickListener {
+        binding.fabShare.setOnClickListener {
             onShareButtonClicked()
         }
 
-        fab_text.setOnClickListener { view ->
-            if (totalAmountDisplay.text.isNotEmpty() && getMessageValues() > 0f) {
+        binding.fabText.setOnClickListener { view ->
+            if (binding.totalAmountDisplay.text.isNotEmpty() && getMessageValues() > 0f) {
                 Snackbar.make(
                     view,
                     getString(R.string.snackbar_sending_text_msg),
@@ -63,43 +69,43 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        fab_email.setOnClickListener { view ->
-                if (totalAmountDisplay.text.isNotEmpty() && getMessageValues() > 0f) {
-                    Snackbar.make(
-                        view,
-                        getString(R.string.snackbar_sending_email_msg),
-                        Snackbar.LENGTH_INDEFINITE
-                    )
-                        .setAction(R.string.button_text_ok) {}
-                        .show()
-                    constructEmail(constructMessage(), venueEntry.text.toString())
-                } else {
-                    Snackbar.make(
-                        view,
-                        getString(R.string.snackbar_no_data_message),
-                        Snackbar.LENGTH_LONG
-                    )
-                        .setAction("Action", null)
-                        .show()
-                }
+        binding.fabEmail.setOnClickListener { view ->
+            if (binding.totalAmountDisplay.text.isNotEmpty() && getMessageValues() > 0f) {
+                Snackbar.make(
+                    view,
+                    getString(R.string.snackbar_sending_email_msg),
+                    Snackbar.LENGTH_INDEFINITE
+                )
+                    .setAction(R.string.button_text_ok) {}
+                    .show()
+                constructEmail(constructMessage(), binding.venueEntry.text.toString())
+            } else {
+                Snackbar.make(
+                    view,
+                    getString(R.string.snackbar_no_data_message),
+                    Snackbar.LENGTH_LONG
+                )
+                    .setAction("Action", null)
+                    .show()
+            }
         }
 
-        dividedAmountLayout.visibility = View.GONE
-        numPayers.isEnabled = splitBillSwitch.isChecked
-        splitBillSwitch.setOnCheckedChangeListener { _, isChecked ->
-            numPayers.isEnabled = isChecked
+        binding.dividedAmountLayout.visibility = View.GONE
+        binding.numPayers.isEnabled = binding.splitBillSwitch.isChecked
+        binding.splitBillSwitch.setOnCheckedChangeListener { _, isChecked ->
+            binding.numPayers.isEnabled = isChecked
 
             if (isChecked) {
                 if (showSplitCheckDialog) {
                     showBillSplittingDialog()
                 }
-                numPayers.requestFocus()
+                binding.numPayers.requestFocus()
                 showKeyboard()
-                dividedAmountLayout.visibility = View.VISIBLE
+                binding.dividedAmountLayout.visibility = View.VISIBLE
             } else {
-                numPayers.setText("")
-                dividedAmountDisplay.setText("")
-                dividedAmountLayout.visibility = View.GONE
+                binding.numPayers.setText("")
+                binding.dividedAmountDisplay.setText("")
+                binding.dividedAmountLayout.visibility = View.GONE
             }
         }
 
@@ -108,29 +114,29 @@ class MainActivity : AppCompatActivity() {
             R.array.string_percentages,
             R.layout.spinner_style
         )
-        tipPercentOptions.adapter = listAdapter
-        tipPercentOptions.onItemSelectedListener =
-            CustomOnItemSelectedListener(calculator, billAmountEntry, tipAmountDisplay)
+        binding.tipPercentOptions.adapter = listAdapter
+        binding.tipPercentOptions.onItemSelectedListener =
+            CustomOnItemSelectedListener(calculator, binding.billAmountEntry, binding.tipAmountDisplay)
 
         setTipOptionViews()
         setTipPercentageToDefaultSelection(getDefaultTipPercentage())
 
-        optionPercentage.setOnClickListener {
+        binding.optionPercentage.setOnClickListener {
             setTipOptionViews()
-            tipAmountDisplay.setText(
+            binding.tipAmountDisplay.setText(
                 calculator.calculateTip(
-                    billAmountEntry.text.toString(),
-                    tipPercentOptions.selectedItem.toString()
+                    binding.billAmountEntry.text.toString(),
+                    binding.tipPercentOptions.selectedItem.toString()
                 )
             )
         }
 
-        optionAmount.setOnClickListener {
+        binding.optionAmount.setOnClickListener {
             setTipOptionViews()
-            tipPercentageValue.setText(calculateTipPercentage())
+            binding.tipPercentageValue.setText(calculateTipPercentage())
         }
 
-        billAmountEntry.addTextChangedListener(object : TextWatcher {
+        binding.billAmountEntry.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
             }
 
@@ -139,30 +145,30 @@ class MainActivity : AppCompatActivity() {
 
             override fun afterTextChanged(s: Editable?) {
                 if (s.toString() == ".") {
-                    billAmountEntry.setText("0.")
-                    billAmountEntry.setSelection(2)
+                    binding.billAmountEntry.setText("0.")
+                    binding.billAmountEntry.setSelection(2)
                 }
 
-                tipAmountDisplay.setText(
+                binding.tipAmountDisplay.setText(
                     calculator.calculateTip(
-                        billAmountEntry.text.toString(),
-                        tipPercentOptions.selectedItem.toString()
+                        binding.billAmountEntry.text.toString(),
+                        binding.tipPercentOptions.selectedItem.toString()
                     )
                 )
-                totalAmountDisplay.setText(
+                binding.totalAmountDisplay.setText(
                     calculator.calculateTotal(
-                        billAmountEntry.text.toString(),
-                        tipAmountDisplay.text.toString()
+                        binding.billAmountEntry.text.toString(),
+                        binding.tipAmountDisplay.text.toString()
                     )
                 )
-                if (splitBillSwitch.isChecked) {
-                    if (numPayers.text.isNotEmpty()) {
+                if (binding.splitBillSwitch.isChecked) {
+                    if (binding.numPayers.text.isNotEmpty()) {
                         val splitNumber =
-                            if (numPayers.text.isEmpty()) "1" else numPayers.text.toString()
-                        dividedAmountDisplay.setText(
+                            if (binding.numPayers.text.isEmpty()) "1" else binding.numPayers.text.toString()
+                        binding.dividedAmountDisplay.setText(
                             calculator.calculateDividedAmount(
-                                billAmountEntry.text.toString(),
-                                tipAmountDisplay.text.toString(),
+                                binding.billAmountEntry.text.toString(),
+                                binding.tipAmountDisplay.text.toString(),
                                 splitNumber.toInt()
                             )
                         )
@@ -171,30 +177,30 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
-        tipAmountDisplay.addTextChangedListener(object : TextWatcher {
+        binding.tipAmountDisplay.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             }
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 // Update the tip percentage field for custom amount
-                tipPercentageValue.setText(calculateTipPercentage())
+                binding.tipPercentageValue.setText(calculateTipPercentage())
             }
 
             override fun afterTextChanged(s: Editable?) {
-                totalAmountDisplay.setText(
+                binding.totalAmountDisplay.setText(
                     calculator.calculateTotal(
-                        billAmountEntry.text.toString(),
-                        tipAmountDisplay.text.toString()
+                        binding.billAmountEntry.text.toString(),
+                        binding.tipAmountDisplay.text.toString()
                     )
                 )
 
-                if (splitBillSwitch.isChecked) {
+                if (binding.splitBillSwitch.isChecked) {
                     val splitNumber =
-                        if (numPayers.text.isEmpty()) "1" else numPayers.text.toString()
-                    dividedAmountDisplay.setText(
+                        if (binding.numPayers.text.isEmpty()) "1" else binding.numPayers.text.toString()
+                    binding.dividedAmountDisplay.setText(
                         calculator.calculateDividedAmount(
-                            billAmountEntry.text.toString(),
-                            tipAmountDisplay.text.toString(),
+                            binding.billAmountEntry.text.toString(),
+                            binding.tipAmountDisplay.text.toString(),
                             splitNumber.toInt()
                         )
                     )
@@ -202,7 +208,7 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
-        numPayers.addTextChangedListener(
+        binding.numPayers.addTextChangedListener(
             object : TextWatcher {
                 override fun beforeTextChanged(s: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 }
@@ -211,26 +217,26 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 override fun afterTextChanged(text: Editable?) {
-                    if (text != null && text.isNotEmpty()) {
-                        dividedAmountDisplay.setText(
+                    if (!text.isNullOrEmpty()) {
+                        binding.dividedAmountDisplay.setText(
                             calculator.calculateDividedAmount(
-                                billAmountEntry.text.toString(),
-                                tipAmountDisplay.text.toString(),
-                                numPayers.text.toString().toInt()
+                                binding.billAmountEntry.text.toString(),
+                                binding.tipAmountDisplay.text.toString(),
+                                binding.numPayers.text.toString().toInt()
                             )
                         )
                     }
                 }
             })
 
-        billAmountEntry.setOnFocusChangeListener { _, hasFocus ->
+        binding.billAmountEntry.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
                 showKeyboard()
             } else {
-                if (billAmountEntry.text.isNotEmpty()) {
-                    billAmountEntry.setText(
+                if (binding.billAmountEntry.text.isNotEmpty()) {
+                    binding.billAmountEntry.setText(
                         calculator.formatDecimal(
-                            billAmountEntry.text.toString().toFloat()
+                            binding.billAmountEntry.text.toString().toFloat()
                         )
                     )
                 }
@@ -240,13 +246,13 @@ class MainActivity : AppCompatActivity() {
         getPreferences()
         promptUserToRateApp()
         // The code below was in onResume... keep an eye out for odd behavior
-        venueEntry.requestFocus()
+        binding.venueEntry.requestFocus()
         showKeyboard()
     }
 
 //    override fun onResume() {
 //        super.onResume()
-//        venueEntry.requestFocus()
+//        binding.venueEntry.requestFocus()
 //        showKeyboard()
 //    }
 
@@ -267,7 +273,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun getMessageValues(): Float {
-        var cleanTotalAmount = totalAmountDisplay.text.toString()
+        var cleanTotalAmount = binding.totalAmountDisplay.text.toString()
         cleanTotalAmount = cleanTotalAmount.replace(",", "")
         cleanTotalAmount = cleanTotalAmount.replace(currencyType, "")
         return cleanTotalAmount.toFloat()
@@ -288,48 +294,39 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setClickable(clicked: Boolean) {
-        if (!clicked) {
-            fab_email.isClickable = true
-            fab_text.isClickable = true
-        } else {
-            fab_email.isClickable = false
-            fab_text.isClickable = false
-        }
+        binding.fabEmail.isClickable = !clicked
+        binding.fabText.isClickable = !clicked
     }
 
     private fun setVisibility(clicked: Boolean) {
-        if (!clicked) {
-            fab_email.visibility = View.VISIBLE
-            fab_text.visibility = View.VISIBLE
-        } else {
-            fab_email.visibility = View.INVISIBLE
-            fab_text.visibility = View.INVISIBLE
-        }
+        val isVisible = if (clicked) View.INVISIBLE else View.VISIBLE
+        binding.fabEmail.visibility = isVisible
+        binding.fabText.visibility = isVisible
     }
 
     private fun setAnimation(clicked: Boolean) {
         if (!clicked) {
-            fab_email.startAnimation(fromBottom)
-            fab_text.startAnimation(fromBottom)
-            fab_share.startAnimation(rotateOpen)
+            binding.fabEmail.startAnimation(fromBottom)
+            binding.fabText.startAnimation(fromBottom)
+            binding.fabShare.startAnimation(rotateOpen)
         } else {
-            fab_email.startAnimation(toBottom)
-            fab_text.startAnimation(toBottom)
-            fab_share.startAnimation(rotateClose)
+            binding.fabEmail.startAnimation(toBottom)
+            binding.fabText.startAnimation(toBottom)
+            binding.fabShare.startAnimation(rotateClose)
         }
     }
 
     private fun calculateTipPercentage(): String {
-        return if (tipAmountDisplay.text.isEmpty() ||
-            NumberFormat.getInstance().parse(tipAmountDisplay.text.toString())!!.toFloat() == 0.00f ||
-            billAmountEntry.text.isEmpty()
+        return if (binding.tipAmountDisplay.text.isEmpty() ||
+            NumberFormat.getInstance().parse(binding.tipAmountDisplay.text.toString())!!.toFloat() == 0.00f ||
+            binding.billAmountEntry.text.isEmpty()
         ) {
             "0.00 %"
         } else {
             String.format(
                 "%.02f",
-                ((NumberFormat.getInstance().parse(tipAmountDisplay.text.toString())!!.toFloat() /
-                        NumberFormat.getInstance().parse(billAmountEntry.text.toString())!!.toFloat()) * 100)
+                ((NumberFormat.getInstance().parse(binding.tipAmountDisplay.text.toString())!!.toFloat() /
+                        NumberFormat.getInstance().parse(binding.billAmountEntry.text.toString())!!.toFloat()) * 100)
             ) + " %"
         }
     }
@@ -349,22 +346,27 @@ class MainActivity : AppCompatActivity() {
                 showTipDefaultPercentagePicker()
                 true
             }
+
             R.id.action_clear -> {
                 clearFields()
                 true
             }
+
             R.id.action_about -> {
                 showAboutDialog()
                 true
             }
+
             R.id.action_currency -> {
                 showCurrencySelectorDialog()
                 true
             }
+
             R.id.action_help -> {
                 showHowToUseInfo()
                 true
             }
+
             R.id.action_share_app -> {
                 sendSmsMessage(
                     getString(R.string.app_name),
@@ -372,10 +374,12 @@ class MainActivity : AppCompatActivity() {
                 )
                 true
             }
+
             R.id.action_rate_app -> {
                 goToPlayStoreToRateApp()
                 true
             }
+
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -389,22 +393,24 @@ class MainActivity : AppCompatActivity() {
             tipStringPercentages[x] = tipPercentages[x].toString()
         }
 
-        dialog.setContentView(R.layout.dialog_picker)
-        dialog.dialogPicker.displayedValues = tipStringPercentages
-        dialog.dialogPicker.minValue = 0
-        dialog.dialogPicker.maxValue = (tipStringPercentages.size - 1)
-        dialog.dialogPicker.value = FIFTEEN_PERCENT
-        dialog.dialogPicker.wrapSelectorWheel = false
+        dialogPickerBinding = DialogPickerBinding.inflate(layoutInflater)
+        setContentView(dialogPickerBinding.root)
+
+        dialogPickerBinding.dialogPicker.displayedValues = tipStringPercentages
+        dialogPickerBinding.dialogPicker.minValue = 0
+        dialogPickerBinding.dialogPicker.maxValue = (tipStringPercentages.size - 1)
+        dialogPickerBinding.dialogPicker.value = FIFTEEN_PERCENT
+        dialogPickerBinding.dialogPicker.wrapSelectorWheel = false
         dialog.setCancelable(false)
 
-        dialog.setButton.setOnClickListener {
-            val selectedPref = tipStringPercentages[dialog.dialogPicker.value]
+        dialogPickerBinding.setButton.setOnClickListener {
+            val selectedPref = tipStringPercentages[dialogPickerBinding.dialogPicker.value]
 
             setTipPercentageToDefaultSelection(selectedPref)
             setDefaultTipPercentage(selectedPref)
             dialog.dismiss()
         }
-        dialog.cancelButton.setOnClickListener { dialog.dismiss() }
+        dialogPickerBinding.cancelButton.setOnClickListener { dialog.dismiss() }
         dialog.show()
     }
 
@@ -417,20 +423,22 @@ class MainActivity : AppCompatActivity() {
             currencyStrings[x] = currencyType[x].toString()
         }
 
-        dialog.setContentView(R.layout.dialog_picker)
-        dialog.dialogTitle.text = resources.getString(R.string.currency_dialog_title)
-        dialog.dialogPicker.displayedValues = currencyStrings
-        dialog.dialogPicker.minValue = 0
-        dialog.dialogPicker.maxValue = (currencyStrings.size - 1)
-        dialog.dialogPicker.value = dialog.dialogPicker.minValue
-        dialog.dialogPicker.wrapSelectorWheel = false
+        dialogPickerBinding = DialogPickerBinding.inflate(layoutInflater)
+        setContentView(dialogPickerBinding.root)
+
+        dialogPickerBinding.dialogTitle.text = resources.getString(R.string.currency_dialog_title)
+        dialogPickerBinding.dialogPicker.displayedValues = currencyStrings
+        dialogPickerBinding.dialogPicker.minValue = 0
+        dialogPickerBinding.dialogPicker.maxValue = (currencyStrings.size - 1)
+        dialogPickerBinding.dialogPicker.value = dialogPickerBinding.dialogPicker.minValue
+        dialogPickerBinding.dialogPicker.wrapSelectorWheel = false
         dialog.setCancelable(false)
 
-        dialog.setButton.setOnClickListener {
-            setCurrencyType(currencyStrings[dialog.dialogPicker.value])
+        dialogPickerBinding.setButton.setOnClickListener {
+            setCurrencyType(currencyStrings[dialogPickerBinding.dialogPicker.value])
             dialog.dismiss()
         }
-        dialog.cancelButton.setOnClickListener { dialog.dismiss() }
+        dialogPickerBinding.cancelButton.setOnClickListener { dialog.dismiss() }
         dialog.show()
     }
 
@@ -440,19 +448,19 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setTipOptionViews() {
-        if (optionPercentage.isChecked) {
-            tipAmountDisplay.isEnabled = false
-            tipPercentOptions.visibility = View.VISIBLE
-            tipPercentageValue.visibility = View.GONE
+        if (binding.optionPercentage.isChecked) {
+            binding.tipAmountDisplay.isEnabled = false
+            binding.tipPercentOptions.visibility = View.VISIBLE
+            binding.tipPercentageValue.visibility = View.GONE
         } else {
-            tipAmountDisplay.apply {
+            binding.tipAmountDisplay.apply {
                 isEnabled = true
                 requestFocus()
                 selectAll()
                 selectionStart
             }
-            tipPercentOptions.visibility = View.GONE
-            tipPercentageValue.visibility = View.VISIBLE
+            binding.tipPercentOptions.visibility = View.GONE
+            binding.tipPercentageValue.visibility = View.VISIBLE
         }
     }
 
@@ -462,9 +470,9 @@ class MainActivity : AppCompatActivity() {
             R.array.string_percentages,
             R.layout.spinner_style
         )
-        tipPercentOptions.adapter = listAdapter
+        binding.tipPercentOptions.adapter = listAdapter
         val spinnerPosition = listAdapter.getPosition(selectedPref)
-        tipPercentOptions.setSelection(spinnerPosition)
+        binding.tipPercentOptions.setSelection(spinnerPosition)
     }
 
     private fun showAboutDialog() {
@@ -479,12 +487,15 @@ class MainActivity : AppCompatActivity() {
 
     private fun showBillSplittingDialog() {
         val dialog = Dialog(this)
-        dialog.setContentView(R.layout.dialog_split_bill)
+
+        dialogSplitBinder = DialogSplitBillBinding.inflate(layoutInflater)
+        setContentView(dialogSplitBinder.root)
+
         dialog.setCancelable(false)
-        dialog.okButton.setOnClickListener { dialog.dismiss() }
+        dialogSplitBinder.okButton.setOnClickListener { dialog.dismiss() }
         dialog.show()
 
-        dialog.checkBoxDontShowAgain.setOnCheckedChangeListener { _, isChecked ->
+        dialogSplitBinder.checkBoxDontShowAgain.setOnCheckedChangeListener { _, isChecked ->
             val prefs = this.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
             val prefEditor = prefs.edit()
             prefEditor.putBoolean(SHOW_SPLIT_DIALOG, !isChecked)
@@ -546,10 +557,10 @@ class MainActivity : AppCompatActivity() {
             apply()
         }
         currencyType = pref
-        totalAmountDisplay.setText(
+        binding.totalAmountDisplay.setText(
             calculator.calculateTotal(
-                billAmountEntry.text.toString(),
-                tipAmountDisplay.text.toString()
+                binding.billAmountEntry.text.toString(),
+                binding.tipAmountDisplay.text.toString()
             )
         )
     }
@@ -560,12 +571,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun clearFields() {
-        venueEntry.setText("")
-        billAmountEntry.setText("")
-        numPayers.setText("")
+        binding.venueEntry.setText("")
+        binding.billAmountEntry.setText("")
+        binding.numPayers.setText("")
         setTipPercentageToDefaultSelection(getDefaultTipPercentage())
-        splitBillSwitch.isChecked = false
-        optionPercentage.performClick()
+        binding.splitBillSwitch.isChecked = false
+        binding.optionPercentage.performClick()
     }
 
     private fun showKeyboard() {
@@ -617,23 +628,23 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun constructMessage(): String {
-        val venueName = "${venueEntry.text}\n"
-        val billAmount = "Bill Amount:  ${billAmountEntry.text}\n"
+        val venueName = "${binding.venueEntry.text}\n"
+        val billAmount = "Bill Amount:  ${binding.billAmountEntry.text}\n"
         val tipAmount = when {
-            optionAmount.isChecked -> "Tip Amount:  ${tipAmountDisplay.text} (${tipPercentageValue.text})\n"
-            else -> "Tip Amount:  ${tipAmountDisplay.text} (${tipPercentOptions.selectedItem})\n"
+            binding.optionAmount.isChecked -> "Tip Amount:  ${binding.tipAmountDisplay.text} (${binding.tipPercentageValue.text})\n"
+            else -> "Tip Amount:  ${binding.tipAmountDisplay.text} (${binding.tipPercentOptions.selectedItem})\n"
         }
-        val totalAmount = "Total Amount:  ${totalAmountDisplay.text}\n"
-        val singlePayer = numPayers.text.isEmpty()
+        val totalAmount = "Total Amount:  ${binding.totalAmountDisplay.text}\n"
+        val singlePayer = binding.numPayers.text.isEmpty()
         val numberOfPayers = if (!singlePayer) {
-            "Number of people:  ${numPayers.text}\n"
+            "Number of people:  ${binding.numPayers.text}\n"
         } else {
             "\n"
         }
         val eachPays = if (!singlePayer) {
             "Each person pays:  ${
                 calculator.formatCurrency(
-                    dividedAmountDisplay.text.toString().toFloat()
+                    binding.dividedAmountDisplay.text.toString().toFloat()
                 )
             }\n\n"
         } else {
