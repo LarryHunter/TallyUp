@@ -8,3 +8,4 @@
 /app/release/app-release.aab
 .idea/*
 .idea/*.xml
+*.xml
