@@ -1,17 +1,15 @@
 apply plugin: 'com.android.application'
-
 apply plugin: 'kotlin-android'
-
 apply plugin: 'kotlin-android-extensions'
 
 android {
-    compileSdkVersion 33
+    compileSdkVersion 34
     defaultConfig {
         applicationId "com.hunterdev.tallyup"
         minSdkVersion 23
-        targetSdkVersion 33
-        versionCode 12
-        versionName "1.1.4"
+        targetSdkVersion 34
+        versionCode 13
+        versionName "1.1.5"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
